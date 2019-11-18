@@ -45,7 +45,7 @@ ArduinoBaord::ArduinoBoard(char portname[5])//example: "COM3", and portname[4]='
 	}
 }
 
-void ArduinoBoard::SendTheResult(char PorF,char CorW)
+void ArduinoBoard::SendTheResult(char PorF,bool CorW)
 {
 	/*
 	out:
@@ -58,11 +58,11 @@ void ArduinoBoard::SendTheResult(char PorF,char CorW)
 		SendToArduino();
 	}
 	else if (PorF == 'P') {
-		if (CorW == 'C') {
+		if (CorW) {
 			this->out = 'P';
 			SendToArduino();
 		}
-		else if(CorW == 'W')
+		else
 		{
 			this->out = 'p';
 			SendToArduino();
