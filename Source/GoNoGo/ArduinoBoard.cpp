@@ -1,6 +1,6 @@
 #include "ArduinoBoard.h"
 
-ArduinoBaord::ArduinoBaord(char portname[5])//example: "COM3", and portname[4]='\0' 
+ArduinoBaord::ArduinoBoard(char portname[5])//example: "COM3", and portname[4]='\0' 
 {//char portname[5]="COM3"
 	lpOutBuffer = &out;
 	dwBytesWrite = 1;
@@ -45,7 +45,7 @@ ArduinoBaord::ArduinoBaord(char portname[5])//example: "COM3", and portname[4]='
 	}
 }
 
-void ArduinoBaord::SendTheResult(char PorF,char CorW)
+void ArduinoBoard::SendTheResult(char PorF,char CorW)
 {
 	/*
 	out:
@@ -71,13 +71,13 @@ void ArduinoBaord::SendTheResult(char PorF,char CorW)
 	
 }
 
-void ArduinoBaord::SendToArduino()
+void ArduinoBoard::SendToArduino()
 {
 	COMSTAT ComStat;
 	DWORD dwErrorFlags;
 	ClearCommError(hCom, &dwErrorFlags, &ComStat);
 	WriteFile(hCom, lpOutBuffer, dwBytesWrite, &dwBytesWrite, NULL);
-	//writefile(句柄，写入内容，写入字节数，实际写入字节数（指针），OVERLAPPED 结构: 一般设定为 NULL)
+	//writefile(鍙ユ焺锛屽啓鍏ュ唴瀹癸紝鍐欏叆瀛楄妭鏁帮紝瀹為檯鍐欏叆瀛楄妭鏁帮紙鎸囬拡锛夛紝OVERLAPPED 缁撴瀯: 涓�鑸瀹氫负 NULL)
 	Sleep(50);
 }
 
