@@ -6,7 +6,7 @@ class ArduinoBoard
 {
 public:
 	ArduinoBoard(char portname[5]);
-	void SendTheResult(char R);
+	void SendTheResult(char PorF, bool CorW);
 private:
 	HANDLE hCom;
 	DWORD dwBytesWrite;
