@@ -83,6 +83,11 @@ void ArduinoBoard::CameraTrigger(bool Sw)//true=camera on. false=off //control t
 	}
 }
 
+void ArduinoBoard::ArduinoStop()
+{
+	CloseHandle(hCom);
+}
+
 void ArduinoBoard::SendToArduino()
 {
 	COMSTAT ComStat;

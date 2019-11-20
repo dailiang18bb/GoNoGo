@@ -196,6 +196,7 @@ int main() {
 	}
 
 	// Close and Cleanup
+	board1.ArduinoStop();
 	closesocket(clientSocket);
 	WSACleanup();
 	return 0;
