@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <windows.h>
+#include "ArduinoBoard.h"
 
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;
@@ -16,7 +17,10 @@ using namespace std;
 
 // Input Singal String length 29 ">>P||DZF419042Z007112692968<<"
 const char P2968[] = "DZF419042Z007112692968";
-const char P2972[] = "DZF419042Z007112692972";
+//const char P2972[] = "DZF419042Z007112692972";
+const char P2972[] = "DZF419198Z032712692972";
+
+bool cameraTrigger = false;
 
 
 // Initialize WinSocket
@@ -48,13 +52,13 @@ void initialization() {
 
 // Compare two parts code
 bool barCodeCompare(const char* selected, char* scanned) {
-	if (strcmp(selected, scanned) != 0) {
+	if (strcmp(selected, scanned) == 0) {
 		cout << "Part check correct." << endl;
-		return FALSE;
+		return true;
 	}
 	else {
 		cout << "!!!!Wrong Part!!!! NG!!!!" << endl;
-		return TRUE;
+		return false;
 	}
 }
 
@@ -64,12 +68,17 @@ int main() {
 	cout << SOFTWARE_NAME << " " << SOFTWARE_VERSION << endl;
 	cout << "Application initiating." << endl;
 
+	ArduinoBoard board1("COM3");
+
+	/*
 	// Test
-	char test1[] = '>>P||DZF419042Z007112692968<<';
-	char sss[23];
+	char test1[] = ">>P||DZF419042Z007112692968<<";
+	//char sss[23];
+	char sss[30];
 
-	strncpy(sss, test1, );
-
+	//strncpy(sss, test1, );
+	strncpy(sss, test1, sizeof(test1));
+	*/
 
 
 	// Declare variables
@@ -131,7 +140,7 @@ int main() {
 	else {
 		cout << "Server connection success£¡" << endl;
 	}
-
+	/*
 	// Telegram
 	 do {
 		testing_count++;
@@ -148,10 +157,43 @@ int main() {
 		}
 	 } while (testing_count < 100);
 
-
-	 // Test compare
-	 barCodeCompare(selected_part_no, scanned_part_no);
 	 
+	// Test compare
+	barCodeCompare(selected_part_no, scanned_part_no);
+	*/	 
+
+
+	int i,j=0;
+	while (j<1000) {
+		//no trigger, free run
+		j++;
+		short count = 0;
+		do {
+			recv_len = recv(clientSocket, recv_buf, recv_buf_len, 0);
+			count++;
+			if (count > 20) {
+				break;
+			}
+		} while (recv_len <= 0);
+		if (count > 20) {
+			cout << "==============================================" << endl;
+			cout << "Unable to get results from camera." << endl;
+			cout << "Please check and restart the application." << endl;
+			break;
+		}
+		recv_buf[29] = '\0';
+		for (i = 0; i < (DEFAULT_PART_NUMBER_LEN-1) ; i++) {
+			scanned_part_no[i] = recv_buf[5 + i];
+		}
+		scanned_part_no[i] = '\0';
+		board1.SendTheResult(recv_buf[2],barCodeCompare(selected_part_no, scanned_part_no));
+		//board1.SendTheResult('p', true);
+		cout << recv_buf << endl;
+		cout << scanned_part_no << endl;
+		cout << selected_part_no << endl;
+		cout << strcmp(scanned_part_no, selected_part_no) << endl;
+
+	}
 
 	// Close and Cleanup
 	closesocket(clientSocket);

@@ -1,9 +1,9 @@
 #include "ArduinoBoard.h"
 
-ArduinoBaord::ArduinoBoard(char portname[5])//example: "COM3", and portname[4]='\0' 
+ArduinoBoard::ArduinoBoard(const char portname[5])//example: "COM3", and portname[4]='\0' 
 {//char portname[5]="COM3"
-	lpOutBuffer = &out;
-	dwBytesWrite = 1;
+	this->lpOutBuffer = &this->out;
+	this->dwBytesWrite = 1;
 	/*
 	wchar_t portN[5];
 	mbstowcs(portN, portname, 5);
@@ -45,11 +45,11 @@ ArduinoBaord::ArduinoBoard(char portname[5])//example: "COM3", and portname[4]='
 	}
 }
 
-void ArduinoBoard::SendTheResult(char PorF,bool CorW)
+void ArduinoBoard::SendTheResult(char PorF, bool CorW)
 {
 	/*
 	out:
-	    F->button off
+		F->button off
 		PC->light off button on //big P
 		PW->light on button off //small p
 	*/
@@ -59,16 +59,28 @@ void ArduinoBoard::SendTheResult(char PorF,bool CorW)
 	}
 	else if (PorF == 'P') {
 		if (CorW) {
-			this->out = 'P';
+			this->out = 'P';//big
 			SendToArduino();
 		}
 		else
 		{
-			this->out = 'p';
+			this->out = 'p';//small
 			SendToArduino();
 		}
 	}
-	
+
+}
+
+void ArduinoBoard::CameraTrigger(bool Sw)//true=camera on. false=off //control the relay for 
+{
+	if (Sw) {
+		this->out = 'T';//trigger
+		SendToArduino();
+	}
+	else {
+		this->out = 'S';//stop
+		SendToArduino();
+	}
 }
 
 void ArduinoBoard::SendToArduino()
@@ -77,7 +89,7 @@ void ArduinoBoard::SendToArduino()
 	DWORD dwErrorFlags;
 	ClearCommError(hCom, &dwErrorFlags, &ComStat);
 	WriteFile(hCom, lpOutBuffer, dwBytesWrite, &dwBytesWrite, NULL);
-	//writefile(鍙ユ焺锛屽啓鍏ュ唴瀹癸紝鍐欏叆瀛楄妭鏁帮紝瀹為檯鍐欏叆瀛楄妭鏁帮紙鎸囬拡锛夛紝OVERLAPPED 缁撴瀯: 涓�鑸瀹氫负 NULL)
+	//writefile(句柄，写入内容，写入字节数，实际写入字节数（指针），OVERLAPPED 结构: 一般设定为 NULL)
 	Sleep(50);
 }
 
