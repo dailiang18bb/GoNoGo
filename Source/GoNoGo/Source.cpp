@@ -23,6 +23,14 @@ const char P2972[] = "DZF419198Z032712692972";
 bool cameraTrigger = false;
 
 
+// Show welcomeScreen
+void welcomeScreen() {
+	cout << "////////////////////////////////////////////////////////" << endl;
+	cout << SOFTWARE_NAME << " " << SOFTWARE_VERSION << endl;
+	cout << "Application initiating." << endl;
+}
+
+
 // Initialize WinSocket
 void initialization() {
 	int err;
@@ -65,9 +73,7 @@ bool barCodeCompare(const char* selected, char* scanned) {
 
 // MAIN
 int main() {
-	cout << SOFTWARE_NAME << " " << SOFTWARE_VERSION << endl;
-	cout << "Application initiating." << endl;
-
+	welcomeScreen();
 	ArduinoBoard board1("COM3");
 
 	/*
@@ -75,7 +81,6 @@ int main() {
 	char test1[] = ">>P||DZF419042Z007112692968<<";
 	//char sss[23];
 	char sss[30];
-
 	//strncpy(sss, test1, );
 	strncpy(sss, test1, sizeof(test1));
 	*/
@@ -131,14 +136,14 @@ int main() {
 	// Create a socket
 	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (connect(clientSocket, (SOCKADDR*)&server_addr, sizeof(SOCKADDR)) == SOCKET_ERROR) {
-		cout << "Server connection failed£¡" << endl;
+		cout << "Server connection failedÂ£Â¡" << endl;
 		closesocket(clientSocket);
 		WSACleanup();
 		Sleep(2000);
 		return 1;
 	}
 	else {
-		cout << "Server connection success£¡" << endl;
+		cout << "Server connection successÂ£Â¡" << endl;
 	}
 	/*
 	// Telegram
@@ -146,17 +151,14 @@ int main() {
 		testing_count++;
 		recv_len = recv(clientSocket, recv_buf, recv_buf_len, 0);
 		recv_buf[29] = '\0';
-
 		if (recv_len < 0) {
 			cout << "Receive message fail!" << endl;
 			break;
 		}
 		else {
 			cout << "Received: " << recv_buf << endl;
-
 		}
 	 } while (testing_count < 100);
-
 	 
 	// Test compare
 	barCodeCompare(selected_part_no, scanned_part_no);
@@ -182,16 +184,25 @@ int main() {
 			break;
 		}
 		recv_buf[29] = '\0';
+    
 		for (i = 0; i < (DEFAULT_PART_NUMBER_LEN-1) ; i++) {
 			scanned_part_no[i] = recv_buf[5 + i];
 		}
 		scanned_part_no[i] = '\0';
-		board1.SendTheResult(recv_buf[2],barCodeCompare(selected_part_no, scanned_part_no));
+
+		if (recv_buf[2] == 'P') {
+			board1.SendTheResult(recv_buf[2], barCodeCompare(selected_part_no, scanned_part_no));
+		}
+		else if(recv_buf[2] == 'F') {
+			board1.SendTheResult(recv_buf[2], false);
+		}
+
 		//board1.SendTheResult('p', true);
-		cout << recv_buf << endl;
-		cout << scanned_part_no << endl;
-		cout << selected_part_no << endl;
-		cout << strcmp(scanned_part_no, selected_part_no) << endl;
+		//cout << recv_buf << endl;
+		//cout << scanned_part_no << endl;
+		//cout << selected_part_no << endl;
+		//cout << strcmp(scanned_part_no, selected_part_no) << endl;
+
 
 	}
 
@@ -201,8 +212,3 @@ int main() {
 	WSACleanup();
 	return 0;
 }
-
-
-
-
-
