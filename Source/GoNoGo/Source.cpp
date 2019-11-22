@@ -136,14 +136,14 @@ int main() {
 	// Create a socket
 	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (connect(clientSocket, (SOCKADDR*)&server_addr, sizeof(SOCKADDR)) == SOCKET_ERROR) {
-		cout << "Server connection failed£¡" << endl;
+		cout << "Server connection failedÂ£Â¡" << endl;
 		closesocket(clientSocket);
 		WSACleanup();
 		Sleep(2000);
 		return 1;
 	}
 	else {
-		cout << "Server connection success£¡" << endl;
+		cout << "Server connection successÂ£Â¡" << endl;
 	}
 	/*
 	// Telegram
@@ -184,7 +184,7 @@ int main() {
 			break;
 		}
 		recv_buf[29] = '\0';
-
+    
 		for (i = 0; i < (DEFAULT_PART_NUMBER_LEN-1) ; i++) {
 			scanned_part_no[i] = recv_buf[5 + i];
 		}
@@ -202,6 +202,7 @@ int main() {
 		//cout << scanned_part_no << endl;
 		//cout << selected_part_no << endl;
 		//cout << strcmp(scanned_part_no, selected_part_no) << endl;
+
 
 	}
 
