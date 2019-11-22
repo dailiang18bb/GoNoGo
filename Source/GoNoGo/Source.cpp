@@ -23,14 +23,6 @@ const char P2972[] = "DZF419198Z032712692972";
 bool cameraTrigger = false;
 
 
-// Show welcomeScreen
-void welcomeScreen() {
-	cout << "////////////////////////////////////////////////////////" << endl;
-	cout << SOFTWARE_NAME << " " << SOFTWARE_VERSION << endl;
-	cout << "Application initiating." << endl;
-}
-
-
 // Initialize WinSocket
 void initialization() {
 	int err;
@@ -73,7 +65,9 @@ bool barCodeCompare(const char* selected, char* scanned) {
 
 // MAIN
 int main() {
-	welcomeScreen();
+	cout << SOFTWARE_NAME << " " << SOFTWARE_VERSION << endl;
+	cout << "Application initiating." << endl;
+
 	ArduinoBoard board1("COM3");
 
 	/*
@@ -188,24 +182,16 @@ int main() {
 			break;
 		}
 		recv_buf[29] = '\0';
-
 		for (i = 0; i < (DEFAULT_PART_NUMBER_LEN-1) ; i++) {
 			scanned_part_no[i] = recv_buf[5 + i];
 		}
 		scanned_part_no[i] = '\0';
-
-		if (recv_buf[2] == 'P') {
-			board1.SendTheResult(recv_buf[2], barCodeCompare(selected_part_no, scanned_part_no));
-		}
-		else if(recv_buf[2] == 'F') {
-			board1.SendTheResult(recv_buf[2], false);
-		}
-
+		board1.SendTheResult(recv_buf[2],barCodeCompare(selected_part_no, scanned_part_no));
 		//board1.SendTheResult('p', true);
-		//cout << recv_buf << endl;
-		//cout << scanned_part_no << endl;
-		//cout << selected_part_no << endl;
-		//cout << strcmp(scanned_part_no, selected_part_no) << endl;
+		cout << recv_buf << endl;
+		cout << scanned_part_no << endl;
+		cout << selected_part_no << endl;
+		cout << strcmp(scanned_part_no, selected_part_no) << endl;
 
 	}
 
